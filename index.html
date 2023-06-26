@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    #statusBox {
+      width: 200px;
+      height: 200px;
+      font-size: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto;
+      border: 1px solid black;
+      transition: background-color 0.5s ease;
+    }
+  </style>
+</head>
+<body>
+  <div id="statusBox">Loading...</div>
+
+  <script>
+    // Replace with your RPi's IP address and port
+    var ws_url = 'ws://10.0.0.217:8000';
+
+    var websocket = new WebSocket(ws_url);
+
+    websocket.onopen = function (event) {
+      document.getElementById('statusBox').textContent = 'Connected';
+    };
+
+    websocket.onmessage = function (event) {
+      document.getElementById('statusBox').textContent = 'Status: ' + event.data;
+      var statusBox = document.getElementById('statusBox');
+      if (event.data === 'ON') {
+        statusBox.style.backgroundColor = 'green';
+      } else {
+        statusBox.style.backgroundColor = 'red';
+      }
+    };
+
+    websocket.onerror = function (event) {
+      document.getElementById('statusBox').textContent = 'Error: ' + event;
+    };
+
+    websocket.onclose = function (event) {
+      document.getElementById('statusBox').textContent = 'Disconnected';
+    };
+  </script>
+</body>
+</html>
